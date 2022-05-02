@@ -20,7 +20,6 @@ pipeline {
 
     stage('Test') {
       steps {
-        sh 'npm install phantomjs-prebuilt'
         sh 'ng test --browsers PhantomJS'
       }
     }
