@@ -20,6 +20,7 @@ pipeline {
 
     stage('Test') {
       steps {
+        sh 'npm i --save-dev karma-phantomjs-launcher'
         sh 'ng test'
       }
     }
