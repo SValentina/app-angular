@@ -20,7 +20,7 @@ pipeline {
 
     stage('Test') {
       steps {
-        sh 'npm install karma-phantomjs-launcher'
+        sh 'npm install phantomjs-prebuilt@2.1.13'
         sh 'ng test --browsers PhantomJS'
       }
     }
