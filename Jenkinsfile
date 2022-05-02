@@ -20,7 +20,7 @@ pipeline {
 
     stage('Test') {
       steps {
-        sh 'npm install phantomjs-prebuilt@2.1.13'
+        sh 'npm install phantomjs-prebuilt@2.1.13 --ignore-scripts'
         sh 'ng test --browsers PhantomJS'
       }
     }
