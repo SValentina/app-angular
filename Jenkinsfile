@@ -8,6 +8,7 @@ pipeline {
   stages {
     stage('Install') {
       steps {
+        sh 'install bzip2'
         sh 'npm install'
       }
     }
