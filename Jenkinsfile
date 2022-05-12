@@ -26,7 +26,10 @@ pipeline {
       }
     }
 
-    stage('Deploy') {
+    stage('Deploy Dev') {
+      when {
+        branch 'dev'
+      }
       steps {
         withCredentials(bindings: [azureServicePrincipal('AZURE_CREDENTIAL_ID')]) {
           sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
