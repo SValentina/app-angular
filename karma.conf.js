@@ -37,9 +37,9 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['ChromeHeadless'],
     chromeOptions: {
-      args: ['--headless', '--no-sandbox']
+      args: ['--headless', '--no-sandbox', '--disable-setuid-sandbox']
     },
     singleRun: true
   });
