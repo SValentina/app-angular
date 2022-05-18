@@ -39,7 +39,7 @@ module.exports = function (config) {
     autoWatch: true,
     browsers: ['ChromeHeadless'],
     chromeOptions: {
-      args: ['--headless', '--no-sandbox', '--disable-setuid-sandbox']
+      args: ['--headless', '--no-sandbox']
     },
     singleRun: true
   });
