@@ -1,8 +1,7 @@
 pipeline {
   agent {
-    docker {
-      image 'valen97/node-chrome-angular:azure-cli'
-      args '--privileged'
+    dockerfile {
+      filename 'Dockerfile'
     }
 
   }
