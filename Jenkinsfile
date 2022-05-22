@@ -14,7 +14,7 @@ pipeline {
         }
         steps{
             withSonarQubeEnv('sonarqube'){
-                sh "${sonarHome}/bin/sonar-scanner -e -Dsonar.login=36c87f6ba08fca14f6555e990caa5681b3b16fde -Dsonar.projectName=calculator-angular -Dsonar.projectVersion=${env.BUILD_NUMBER} -Dsonar.projectKey=Calculator -Dsonar.sources=src/app"
+                sh "${sonarHome}/bin/sonar-scanner"
             }
         }
     }
