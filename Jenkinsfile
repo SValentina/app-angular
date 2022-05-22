@@ -18,7 +18,11 @@ pipeline {
             }
         }
     }
-
+    stage("Quality gate") {
+        steps {
+            waitForQualityGate abortPipeline: true
+        }
+    }
     stage('Install') {
       steps {
         sh 'npm config set fetch-retry-mintimeout 20000'
