@@ -41,6 +41,6 @@ module.exports = function (config) {
     chromeOptions: {
       args: ['--headless', '--no-sandbox']
     },
-    singleRun: true,
+    singleRun: true
   });
 };
