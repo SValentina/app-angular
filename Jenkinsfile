@@ -7,28 +7,8 @@ pipeline {
 
   }
   stages {
-    stage('Sonar Scanner') {
-        environment{
-            sonarHome = tool 'sonar-scanner'
-            JAVA_HOME = tool 'openjdk-11'
-        }
-        steps{
-            withSonarQubeEnv('sonarqube'){
-                sh "${sonarHome}/bin/sonar-scanner"
-            }
-        }
-    }
-    stage("Quality gate") {
-        steps {
-            waitForQualityGate abortPipeline: true
-        }
-    }
     stage('Install') {
       steps {
-        sh 'npm config set fetch-retry-mintimeout 20000'
-        sh 'npm config set fetch-retry-maxtimeout 120000'
-        sh 'npm config rm proxy'
-        sh 'npm config rm https-proxy'
         sh 'npm install'
       }
     }
