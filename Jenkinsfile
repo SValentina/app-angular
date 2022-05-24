@@ -31,7 +31,7 @@ pipeline {
         branch 'dev'
       }
       steps {
-        withCredentials(bindings: [azureServicePrincipal('AzureServPr')]) {
+        withCredentials(bindings: [azureServicePrincipal('$AZURE_ID')]) {
           sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
           sh 'az webapp deployment source config-zip -g $RESOURCE_GROUP -n $APP_NAME --src ./app-angular.zip'
         }
@@ -41,5 +41,6 @@ pipeline {
   parameters {
     string(name: 'RESOURCE_GROUP', defaultValue: 'SOCIUSRGLAB-RG-MODELODEVOPS-DEV', description: 'Grupo de Recursos')
     string(name: 'APP_NAME', defaultValue: 'sociuswebapptest007', description: 'Nombre de App Service')
+    string(name: 'AZURE_ID', defaultValue: 'AzureServicePrincipal', description: 'Id de credenciales de Azure')
   }
 }
