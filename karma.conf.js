@@ -42,7 +42,8 @@ module.exports = function (config) {
       MyHeadlessChrome: {
         base: 'ChromeHeadless',
         flags: ['--no-sandbox']
-    },
+      }
+    }
     /*chromeOptions: {
       args: ['--headless','--no-sandbox']
     },*/
