@@ -38,15 +38,9 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['ChromeHeadless'],
-    customLaunchers: {
-      MyHeadlessChrome: {
-        base: 'ChromeHeadless',
-        flags: ['--no-sandbox']
-      }
-    },
-    /*chromeOptions: {
+    chromeOptions: {
       args: ['--headless','--no-sandbox']
-    },*/
+    },
     singleRun: true
   });
 };
