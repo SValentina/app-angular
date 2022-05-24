@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       image 'valen97/node-chrome-angular:azure-cli'
-      args '--network=host'
+      args '--privileged --network=host'
     }
 
   }
