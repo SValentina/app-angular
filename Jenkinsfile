@@ -9,7 +9,7 @@ pipeline {
   stages {
     stage('Install') {
       steps {
-        sh 'npm install'
+        sh 'npm install'        
       }
     }
 
@@ -26,6 +26,23 @@ pipeline {
       }
     }
     
+    stage('SonarQube Analysis') {
+        environment{
+            sonarHome = tool 'sonar-scanner'
+            JAVA_HOME = tool 'openjdk-11'
+        }
+        steps{
+            withSonarQubeEnv('sonarqube'){
+                sh "${sonarHome}/bin/sonar-scanner"
+            }
+        }
+    }
+    stage("Quality Gate") {
+        steps {
+            waitForQualityGate abortPipeline: true     
+            echo '--- QualityGate Passed ---'
+        }
+    }
     stage('Deploy Dev') {
       when {
         branch 'dev'
