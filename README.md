@@ -7,7 +7,7 @@ Fuente: https://codingdiksha.com/angular-calculator-application-source-code/
 ## Instalación de Jenkins y SonarQube utilizando Docker
 Se utilizó Docker para correr tanto el servidor Jenkins como la plataforma de SonarQube sobre contenedores, por medio del archivo docker-compose.yml. También se puede seguir la instalación de la [documentación oficial de Jenkins](https://www.jenkins.io/doc/book/installing/docker/).
 
-Se almacena el `docker-compose.yml` en un directorio, y dentro del mismo la primera vez se ejecuta por terminal `docker-compose up -d`.
+Se almacena el `docker-compose.yml` en un directorio, y dentro del mismo la primera vez se ejecuta por terminal `docker-compose up -d`. Luego `docker-compose start` para iniciar los servicios que var a ser accesibles desde: `http://localhost:8080` (Jenkins) y `http://localhost:9000/` (SonarQube) o la IP utilizada. 
 
 Comandos a utilizar: 
 - `docker-compose start|stop|restart`: Para iniciar/finalizar/reiniciar ambos servicios 
@@ -51,18 +51,17 @@ networks:
 ```
 ## Jenkins
 ### Plugins utilizados
-- Azure Credentials
-- Pipeline Utility Steps 
-- SonarQube Scanner
+- [Azure Credentials](https://plugins.jenkins.io/azure-credentials/): 
+- [Pipeline Utility Steps](https://plugins.jenkins.io/pipeline-utility-steps/) 
+- [SonarQube Scanner](https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-jenkins/)
 
 ### Global Tools Configuration
 - JDK 
 
 ### Jenkinsfile
 
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
 ## SonarQube 
-
+Para realizar el análisis de calidad del código fuente del proyecto, se utiliza el archivo `sonar-project.properties` el cual contiene las propiedades necesarias para la ejecución del Scanner y debe ser alojado en el directorio raíz para su correcta utilización. 
+### Quality Gates
+Para poder utilizar la función [waitForQualityGates](https://www.jenkins.io/doc/pipeline/steps/sonar/) se necesita establecer el WebHook en SonarQube. 
