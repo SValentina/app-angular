@@ -15,53 +15,62 @@ Comandos a utilizar:
 - `docker-compose logs -f <nombre_servicio>`: Para ver los logs del servicio
 - `docker exec -it jenkins bash`: Para ejecutar la terminal dentro del contenedor de Jenkins. 
 
-La imagen que se utilizó para Jenkins fue ... Y la imagen utilizada para SonarQube es la versión 9.4.0 de Community Edition, ya que versiones anteriores no poseen soporte de Node.js. 
+La imagen que se utilizó para Jenkins fue ... Y la imagen utilizada para SonarQube es la última, ya que versiones anteriores (incluida la versión LTS) no poseen soporte de Node.js. 
 
 ### docker-compose.yml
 
 ```
-version: "3.8"
+version: '3.8'
 services:
     jenkins:
-        image: jenkins/jenkins:lts
-        privileged: true
-        user: root
+        image: jenkins/docker
+        build:
+            context: dockerjenkins
         ports:
-            - 8080:8080 
-            - 50000:50000           
+            - 8080:8080
+            - 50000:50000
         container_name: jenkins
         volumes:
-            - jenkins_configuration:/var/jenkins_home
+            - $PWD/jenkins_home:/var/jenkins_home
             - /var/run/docker.sock:/var/run/docker.sock
         networks:
-            - mynetwork
+            - net
     sonarqube:
-        image: sonarqube:9.4.0-community
+        image: sonarqube:latest
         privileged: true
         ports:
             - 9000:9000
+            - 9092:9092
         networks:
-            - mynetwork
+            - net
         environment:
             - SONAR_FORCEAUTHENTICATION=false
-volumes: 
-    jenkins_configuration:
 networks:
-    mynetwork:
+    net:
 ```
 ## Jenkins
 ### Plugins utilizados
-- [Azure Credentials](https://plugins.jenkins.io/azure-credentials/): 
-- [Pipeline Utility Steps](https://plugins.jenkins.io/pipeline-utility-steps/) 
-- [SonarQube Scanner](https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-jenkins/)
+- [Azure Credentials](https://plugins.jenkins.io/azure-credentials/): Se debe crear una credencial del tipo Azure Service Principal para poder realizar el deployment. 
+- [Pipeline Utility Steps](https://plugins.jenkins.io/pipeline-utility-steps/): Se utiliza en el stage Build para comprimir los archivos resultantes. 
+- [SonarQube Scanner](https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-jenkins/): Permite conectar Jenkins con el servidor de SonarQube. Se debe completar en la configuración global de Jenkins, en la sección **SonarQube servers** el nombre del servidor (`sonarqube`) y la URL del mismo (`http://localhost:9090`)
 
 ### Global Tools Configuration
-- JDK 
-
-### Jenkinsfile
-
+- **JDK** 
+  - Nombre: `openjdk-11`
+  - :heavy_check_mark: Instalar automáticamente
+  - Dirección web del archivo ejecutable: `https://download.java.net/java/GA/jdk11/13/GPL/openjdk-11.0.1_linux-x64_bin.tar.gz`
+  - Directorio donde extraer el archivo: `jdk-11.0.1`
+  
+- **SonarQube Scanner**
+  - Nombre: `sonar-scanner`
+  - :heavy_check_mark: Instalar automáticamente
+  - Install from Maven Central Versión: `4.7.0.2747`
 
 ## SonarQube 
 Para realizar el análisis de calidad del código fuente del proyecto, se utiliza el archivo `sonar-project.properties` el cual contiene las propiedades necesarias para la ejecución del Scanner y debe ser alojado en el directorio raíz para su correcta utilización. 
 ### Quality Gates
 Para poder utilizar la función [waitForQualityGates](https://www.jenkins.io/doc/pipeline/steps/sonar/) se necesita establecer el WebHook en SonarQube. 
+
+Ir a **Administration** > **Webhooks** > **Create**, y completar los siguientes campos: 
+- Name: `webhook-sonar`
+- URL: `http://localhost:8080/sonarqube-webhook`
