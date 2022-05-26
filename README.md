@@ -7,10 +7,11 @@ Para llevar a cabo la ejecución de la Pipeline se creó un Dockerfile a partir 
 Código fuente de la aplicación Angular: https://codingdiksha.com/angular-calculator-application-source-code/
 
 Versiones utilizadas: 
-- Node.js: 16.0.0
-- Angular-CLI: 13.0.0
-- Chrome: 
-- Azure-CLI:
+- Node.js: 16.15.0
+- Angular-CLI: 13.3.4
+- Angular: 13.3.5
+- Chrom(e|ium) stable
+- Azure-CLI: 2.37.0
 
 ## Instalación de Jenkins y SonarQube utilizando Docker
 Se utilizó Docker para correr tanto el servidor Jenkins como la plataforma de SonarQube sobre contenedores, por medio del archivo docker-compose.yml. También se puede seguir la instalación de la [documentación oficial de Jenkins](https://www.jenkins.io/doc/book/installing/docker/).
