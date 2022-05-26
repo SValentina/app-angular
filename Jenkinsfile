@@ -23,7 +23,7 @@ pipeline {
 
         stage('Build Prod') {
           steps {
-            sh 'ng build --configuration prod'
+            sh 'ng build --configuration production'
             zip(zipFile: 'app-angular-prod.zip', dir: "${env.WORKSPACE}"+'/dist/app-angular')
           }
         }
