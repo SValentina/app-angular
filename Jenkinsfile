@@ -84,6 +84,8 @@ pipeline {
 
   }
   parameters {
+    string(name: 'ENV_PROD', defaultValue: 'production', description: 'Nombre del entorno de producción')
+    string(name: 'ENV_DEV', defaultValue: 'development', description: 'Nombre del entorno de desarrollo')
     string(name: 'RESOURCE_GROUP', defaultValue: 'SOCIUSRGLAB-RG-MODELODEVOPS-DEV', description: 'Grupo de Recursos')
     string(name: 'APP_NAME', defaultValue: 'sociuswebapptest007', description: 'Nombre de App Service')
   }
