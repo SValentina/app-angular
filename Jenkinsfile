@@ -16,7 +16,7 @@ pipeline {
       parallel {
         stage('Build Dev') {
           steps {
-            sh 'ng build --configuration dev'
+            sh 'ng build --configuration development'
             zip(zipFile: 'app-angular-dev.zip', dir: "${env.WORKSPACE}"+'/dist/app-angular')
           }
         }
