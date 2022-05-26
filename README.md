@@ -1,8 +1,16 @@
 # Calculadora Angular 
+Repositorio que contiene una aplicación Angular, con el archivo Jenkinsfile que corresponde a la pipeline que automatiza una serie de pasos establecidos dentro de diferentes Stages (escenarios) para culminar con el despliegue de la misma en un App Service de Azure. 
+Además, se realiza el análisis de calidad de código mediante la integración de Jenkins con el servidor SonarQube.
 
-Este proyecto fue generado con [Angular CLI](https://github.com/angular/angular-cli) version 13.3.4.
-Se creo
-Fuente: https://codingdiksha.com/angular-calculator-application-source-code/
+Para llevar a cabo la ejecución de la Pipeline se creó un Dockerfile a partir de una [imagen de node-chrome](https://hub.docker.com/r/timbru31/node-chrome) a la que se le añadió Angular-CLI y Azure-CLI. 
+
+Código fuente de la aplicación Angular: https://codingdiksha.com/angular-calculator-application-source-code/
+
+Versiones utilizadas: 
+- Node.js: 16.0.0
+- Angular-CLI: 13.0.0
+- Chrome: 
+- Azure-CLI:
 
 ## Instalación de Jenkins y SonarQube utilizando Docker
 Se utilizó Docker para correr tanto el servidor Jenkins como la plataforma de SonarQube sobre contenedores, por medio del archivo docker-compose.yml. También se puede seguir la instalación de la [documentación oficial de Jenkins](https://www.jenkins.io/doc/book/installing/docker/).
@@ -68,7 +76,7 @@ networks:
 
 ## SonarQube 
 Para realizar el análisis de calidad del código fuente del proyecto, se utiliza el archivo `sonar-project.properties` el cual contiene las propiedades necesarias para la ejecución del Scanner y debe ser alojado en el directorio raíz para su correcta utilización. 
-### Quality Gates
+### Quality Gate
 Para poder utilizar la función [waitForQualityGates](https://www.jenkins.io/doc/pipeline/steps/sonar/) se necesita establecer el WebHook en SonarQube. 
 
 Ir a **Administration** > **Webhooks** > **Create**, y completar los siguientes campos: 
