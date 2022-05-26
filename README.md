@@ -2,7 +2,7 @@
 Repositorio que contiene una aplicación Angular, con el archivo Jenkinsfile que corresponde a la pipeline que automatiza una serie de pasos establecidos dentro de diferentes Stages (escenarios) para culminar con el despliegue de la misma en un App Service de Azure. 
 Además, se realiza el análisis de calidad de código mediante la integración de Jenkins con el servidor SonarQube.
 
-Para llevar a cabo la ejecución de la Pipeline se creó un Dockerfile a partir de una [imagen de node-chrome](https://hub.docker.com/r/timbru31/node-chrome) a la que se le añadió Angular-CLI y Azure-CLI. 
+Para llevar a cabo la ejecución de la Pipeline se utiliza como agente global un Dockerfile creado a partir de una [imagen de node-chrome](https://hub.docker.com/r/timbru31/node-chrome) a la que se le añadió Angular-CLI y Azure-CLI. 
 
 Código fuente de la aplicación Angular: https://codingdiksha.com/angular-calculator-application-source-code/
 
