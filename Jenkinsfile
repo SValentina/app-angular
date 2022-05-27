@@ -16,18 +16,17 @@ pipeline {
       parallel {
         stage('Build Dev') {
           steps {
-            sh 'ng build --configuration development'
-            zip(zipFile: 'app-angular-dev.zip', dir: "${env.WORKSPACE}"+'/dist/app-angular')
+            sh 'ng build --configuration ${ENV_DEV}'
+            zip(zipFile: "${ENV_DEV}"+'.zip', dir: "${env.WORKSPACE}"+'/dist/app-angular')
           }
         }
 
         stage('Build Prod') {
           steps {
-            sh 'ng build --configuration production'
-            zip(zipFile: 'app-angular-prod.zip', dir: "${env.WORKSPACE}"+'/dist/app-angular')
+            sh 'ng build --configuration ${ENV_PROD}'
+            zip(zipFile: "${ENV_PROD}"+'.zip', dir: "${env.WORKSPACE}"+'/dist/app-angular')
           }
         }
-
       }
     }
 
@@ -67,7 +66,7 @@ pipeline {
           steps {
             withCredentials(bindings: [azureServicePrincipal('AzureServicePrincipal')]) {
               sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
-              sh 'az webapp deployment source config-zip -g $RESOURCE_GROUP -n $APP_NAME --src ./app-angular-dev.zip'
+              sh 'az webapp deployment source config-zip -g $RESOURCE_GROUP -n $APP_NAME --src'+"${ENV_DEV}"+'.zip'
             }
 
           }
