@@ -18,7 +18,7 @@ pipeline {
           steps {
             dir("${WORKSPACE}/src/environments"){
                 sh 'pwd'
-                prependToFile(file: 'environment.prod.ts', content: 'export const environment = {   production: false,   title:\'dev\' };')
+                prependToFile(file: 'environment.jenkins.ts', content: 'export const environment = {   production: false,   title:\'dev\' };')
             }
             sh 'ng build --configuration ${ENV_DEV}'
             zip(zipFile: "${ENV_DEV}"+'.zip', dir: "${env.WORKSPACE}"+'/dist/app-angular')
