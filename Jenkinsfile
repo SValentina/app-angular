@@ -16,6 +16,10 @@ pipeline {
       parallel {
         stage('Build Dev') {
           steps {
+            dir("${WORKSPACE}/src/environments"){
+                sh 'pwd'
+                prependToFile(file: 'environment.prod.ts', content: 'export const environment = {   production: false,   title:\'dev\' };')
+            }
             sh 'ng build --configuration ${ENV_DEV}'
             zip(zipFile: "${ENV_DEV}"+'.zip', dir: "${env.WORKSPACE}"+'/dist/app-angular')
           }
@@ -27,57 +31,6 @@ pipeline {
             zip(zipFile: "${ENV_PROD}"+'.zip', dir: "${env.WORKSPACE}"+'/dist/app-angular')
           }
         }
-      }
-    }
-
-    stage('Test') {
-      steps {
-        sh 'ng test --browsers ChromeHeadless'
-        sleep(time: 90, unit: 'SECONDS')
-      }
-    }
-
-    stage('SonarQube Analysis') {
-      environment {
-        sonarHome = 'sonar-scanner'
-        JAVA_HOME = 'openjdk-11'
-      }
-      steps {
-        withSonarQubeEnv('sonarqube') {
-          sh "${sonarHome}/bin/sonar-scanner"
-        }
-
-      }
-    }
-
-    stage('Quality Gate') {
-      steps {
-        waitForQualityGate true
-        echo '--- QualityGate Passed ---'
-      }
-    }
-
-    stage('Deploy') {
-      parallel {
-        stage('Deploy Dev') {
-          when {
-            branch 'dev'
-          }
-          steps {
-            withCredentials(bindings: [azureServicePrincipal('AzureServicePrincipal')]) {
-              sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
-              sh 'az webapp deployment source config-zip -g $RESOURCE_GROUP -n $APP_NAME --src'+"${ENV_DEV}"+'.zip'
-            }
-
-          }
-        }
-
-        stage('Deploy Prod') {
-          steps {
-            echo 'deploy a prod'
-          }
-        }
-
       }
     }
 
