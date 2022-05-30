@@ -54,7 +54,7 @@ pipeline {
           }
         }
       }
-
+    }
   }
   parameters {
     string(name: 'ENV_PROD', defaultValue: 'production', description: 'Nombre del entorno de producción')
