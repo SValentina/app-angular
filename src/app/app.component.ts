@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { environment } from 'src/environments/environment.jenkins';
 
 @Component({
   selector: 'app-root',
@@ -7,7 +8,7 @@ import { Component } from '@angular/core';
 export class AppComponent {
   input: string = '';
   result: string = '';
-
+  title: string = environment.title;
 
   pressNum(num: string) {
 
