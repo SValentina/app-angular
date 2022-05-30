@@ -15,18 +15,23 @@ pipeline {
     stage('Build') {
       parallel {
         stage('Build Dev') {
+          environment{
+            TITLE = 'dev'
+          }
           steps {
-            dir("${WORKSPACE}/src/environments"){
-                sh 'pwd'
-                prependToFile(file: 'environment.dev.ts', content: 'export const environment = {   production: false,   title:\'dev\' };')
-            }
+            contentReplace(configs: [fileContentReplaceConfig(configs: [fileContentReplaceItemConfig(matchCount: 1, replace: "${TITLE}", search: '%TITLE%')], fileEncoding: 'UTF-8', filePath: "${env.WORKSPACE}"+'/src/environments/environment.ts')])
             sh 'ng build --configuration ${ENV_DEV}'
             zip(zipFile: "${ENV_DEV}"+'.zip', dir: "${env.WORKSPACE}"+'/dist/app-angular')
           }
         }
 
         stage('Build Prod') {
+          environment{
+              TITLE = 'prod'
+          }
           steps {
+            sleep(time: 60, unit: 'SECONDS')
+            contentReplace(configs: [fileContentReplaceConfig(configs: [fileContentReplaceItemConfig(matchCount: 1, replace: "${TITLE}", search: '%TITLE%')], fileEncoding: 'UTF-8', filePath: "${env.WORKSPACE}"+'/src/environments/environment.ts')])
             sh 'ng build --configuration ${ENV_PROD}'
             zip(zipFile: "${ENV_PROD}"+'.zip', dir: "${env.WORKSPACE}"+'/dist/app-angular')
           }
@@ -50,7 +55,11 @@ pipeline {
 
         stage('Deploy Prod') {
           steps {
-            echo 'prod'
+            sleep(time: 30, unit: 'SECONDS')
+            withCredentials(bindings: [azureServicePrincipal('AzureServicePrincipal')]) {
+              sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
+              sh 'az webapp deployment source config-zip -g $RESOURCE_GROUP -n $APP_NAME --src '+"${ENV_PROD}"+'.zip'
+            }
           }
         }
       }
