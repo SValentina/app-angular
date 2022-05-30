@@ -27,10 +27,6 @@ pipeline {
 
         stage('Build Prod') {
           steps {
-            dir("${WORKSPACE}/src/environments"){
-                sh 'pwd'
-                prependToFile(file: 'environment.prod.ts', content: 'export const environment = {   production: true,   title:\'prod\' };')
-            }
             sh 'ng build --configuration ${ENV_PROD}'
             zip(zipFile: "${ENV_PROD}"+'.zip', dir: "${env.WORKSPACE}"+'/dist/app-angular')
           }
@@ -54,11 +50,7 @@ pipeline {
 
         stage('Deploy Prod') {
           steps {
-            sleep(time: 30, unit: 'SECONDS')
-            withCredentials(bindings: [azureServicePrincipal('AzureServicePrincipal')]) {
-              sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
-              sh 'az webapp deployment source config-zip -g $RESOURCE_GROUP -n $APP_NAME --src'+"${ENV_DEV}"+'.zip'
-            }
+            echo 'prod'
           }
         }
       }
