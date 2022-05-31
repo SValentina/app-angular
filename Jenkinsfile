@@ -31,7 +31,7 @@ pipeline {
           }
           steps {
             sleep(time: 60, unit: 'SECONDS')
-            contentReplace(configs: [fileContentReplaceConfig(configs: [fileContentReplaceItemConfig(matchCount: 1, replace: "${TITLE}", search: '%TITLE%|dev')], fileEncoding: 'UTF-8', filePath: "${env.WORKSPACE}"+'/src/environments/environment.ts')])
+            contentReplace(configs: [fileContentReplaceConfig(configs: [fileContentReplaceItemConfig(matchCount: 2, replace: "${TITLE}", search: '%TITLE%|dev')], fileEncoding: 'UTF-8', filePath: "${env.WORKSPACE}"+'/src/environments/environment.ts')])
             sh 'ng build --configuration ${ENV_PROD}'
             zip(zipFile: "${ENV_PROD}"+'.zip', dir: "${env.WORKSPACE}"+'/dist/app-angular')
           }
