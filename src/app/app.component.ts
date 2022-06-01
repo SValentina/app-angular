@@ -9,6 +9,7 @@ export class AppComponent {
   input: string = '';
   result: string = '';
   title: string = environment.title;
+  button: string = environment.button;
 
   pressNum(num: string) {
 
