@@ -35,7 +35,7 @@ pipeline {
                sh 'pwd'
                contentReplace(configs: [fileContentReplaceConfig(configs: [fileContentReplaceItemConfig(replace: "${TITLE}", search: '%TITLE%'), fileContentReplaceItemConfig(replace: "${BUTTON}", search: '%BUTTON%')], fileEncoding: 'UTF-8', filePath: "${env.WORKSPACE}"+'/src/environments/environment.ts')])
                sh 'ng build --configuration ${ENV_DEV}'
-               zip(zipFile: "${ENV_DEV}"+'.zip', dir: "${env.WORKSPACE}"+'dist/app-angular')
+               zip(zipFile: "${ENV_DEV}"+'.zip', dir: "${env.WORKSPACE}"+'/dist/app-angular')
             }
           }
         }
@@ -46,6 +46,7 @@ pipeline {
               BUTTON = 'danger'
           }
           steps {
+            sh 'pwd'
             sleep(time: 60, unit: 'SECONDS')
             contentReplace(configs: [fileContentReplaceConfig(configs: [fileContentReplaceItemConfig(replace: "${TITLE}", search: '%TITLE%|dev'), fileContentReplaceItemConfig(replace: "${BUTTON}", search: '%BUTTON%|success')], fileEncoding: 'UTF-8', filePath: "${env.WORKSPACE}"+'/src/environments/environment.ts')])
             sh 'ng build --configuration ${ENV_PROD}'
