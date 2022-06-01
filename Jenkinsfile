@@ -1,12 +1,17 @@
 pipeline {
   
   agent { dockerfile { args '--privileged --network=host' } }
-  options { skipDefaultCheckout() } 
+  //options { skipDefaultCheckout() } 
   
   stages {
     stage('Checkout'){
         steps{
-           checkout scm
+          dir('dev'){ 
+            checkout scm 
+          }
+          dir('prod'){ 
+            checkout scm 
+          }
         }
     }
 
@@ -26,9 +31,9 @@ pipeline {
           steps {
             dir ('dev'){
                sh 'pwd'
-               contentReplace(configs: [fileContentReplaceConfig(configs: [fileContentReplaceItemConfig(replace: "${TITLE}", search: '%TITLE%'), fileContentReplaceItemConfig(replace: "${BUTTON}", search: '%BUTTON%')], fileEncoding: 'UTF-8', filePath: "${env.WORKSPACE}"+'/src/environments/environment.ts')])
+               contentReplace(configs: [fileContentReplaceConfig(configs: [fileContentReplaceItemConfig(replace: "${TITLE}", search: '%TITLE%'), fileContentReplaceItemConfig(replace: "${BUTTON}", search: '%BUTTON%')], fileEncoding: 'UTF-8', filePath: "${env.WORKSPACE}"+'/dev/src/environments/environment.ts')])
                sh 'ng build --configuration ${ENV_DEV}'
-               zip(zipFile: "${ENV_DEV}"+'.zip', dir: "${env.WORKSPACE}"+'/dist/app-angular')
+               zip(zipFile: "${ENV_DEV}"+'.zip', dir: "${env.WORKSPACE}"+'/dev/dist/app-angular')
             }
           }
         }
@@ -39,11 +44,11 @@ pipeline {
               BUTTON = 'danger'
           }
           steps {
-            sh 'pwd'
-            sleep(time: 60, unit: 'SECONDS')
-            contentReplace(configs: [fileContentReplaceConfig(configs: [fileContentReplaceItemConfig(replace: "${TITLE}", search: '%TITLE%|dev'), fileContentReplaceItemConfig(replace: "${BUTTON}", search: '%BUTTON%|success')], fileEncoding: 'UTF-8', filePath: "${env.WORKSPACE}"+'/src/environments/environment.ts')])
-            sh 'ng build --configuration ${ENV_PROD}'
-            zip(zipFile: "${ENV_PROD}"+'.zip', dir: "${env.WORKSPACE}"+'/dist/app-angular')
+            dir('prod'){
+              contentReplace(configs: [fileContentReplaceConfig(configs: [fileContentReplaceItemConfig(replace: "${TITLE}", search: '%TITLE%|dev'), fileContentReplaceItemConfig(replace: "${BUTTON}", search: '%BUTTON%|success')], fileEncoding: 'UTF-8', filePath: "${env.WORKSPACE}"+'/prod/src/environments/environment.ts')])
+              sh 'ng build --configuration ${ENV_PROD}'
+              zip(zipFile: "${ENV_PROD}"+'.zip', dir: "${env.WORKSPACE}"+'/prod/dist/app-angular')
+            }
           }
         }
       }
@@ -56,9 +61,11 @@ pipeline {
             branch 'dev'
           }
           steps {
-            withCredentials(bindings: [azureServicePrincipal('AzureServicePrincipal')]) {
-              sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
-              sh 'az webapp deployment source config-zip -g $RESOURCE_GROUP -n $APP_NAME --src '+"${ENV_DEV}"+'.zip'
+            dir('dev'){
+              withCredentials(bindings: [azureServicePrincipal('AzureServicePrincipal')]) {
+                sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
+                sh 'az webapp deployment source config-zip -g $RESOURCE_GROUP -n $APP_NAME --src '+"${ENV_DEV}"+'.zip'
+              }
             }
           }
         }
@@ -66,9 +73,11 @@ pipeline {
         stage('Deploy Prod') {
           steps {
             sleep(time: 30, unit: 'SECONDS')
-            withCredentials(bindings: [azureServicePrincipal('AzureServicePrincipal')]) {
-              sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
-              sh 'az webapp deployment source config-zip -g $RESOURCE_GROUP -n $APP_NAME --src '+"${ENV_PROD}"+'.zip'
+            dir('prod'){
+              withCredentials(bindings: [azureServicePrincipal('AzureServicePrincipal')]) {
+                sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
+                sh 'az webapp deployment source config-zip -g $RESOURCE_GROUP -n $APP_NAME --src '+"${ENV_PROD}"+'.zip'
+              }
             }
           }
         }
