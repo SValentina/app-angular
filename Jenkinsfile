@@ -6,14 +6,7 @@ pipeline {
   stages {
     stage('Checkout'){
         steps{
-          checkout([
-              $class: 'GitSCM', 
-              branches: [[name: '*/dev']], 
-              extensions: 
-                [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'dev'], 
-                [$class: 'RelativeTargetDirectory', relativeTargetDir: 'prod']], 
-              userRemoteConfigs: [[credentialsId: 'github_vs', url: 'https://github.com/SValentina/app-angular.git']]
-            ])
+           checkout scm
         }
     }
 
