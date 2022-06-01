@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   title: '%TITLE%',
-  button: '%BUTTON%
+  button: '%BUTTON%'
 };
 
 /*
