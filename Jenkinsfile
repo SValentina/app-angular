@@ -8,7 +8,7 @@ pipeline {
         steps{
           checkout([
               $class: 'GitSCM', 
-              branches: [[name: '**']], 
+              branches: [[name: '*/dev']], 
               extensions: 
                 [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'dev'], 
                 [$class: 'RelativeTargetDirectory', relativeTargetDir: 'prod']], 
