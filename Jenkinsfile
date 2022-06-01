@@ -41,6 +41,33 @@ pipeline {
       }
     }
     
+    stage('Test') {
+      steps {
+        sh 'ng test --browsers ChromeHeadless'
+        sleep(time: 90, unit: 'SECONDS')
+      }
+    }
+
+    stage('SonarQube Analysis') {
+      environment {
+        sonarHome = 'sonar-scanner'
+        JAVA_HOME = 'openjdk-11'
+      }
+      steps {
+        withSonarQubeEnv('sonarqube') {
+          sh "${sonarHome}/bin/sonar-scanner"
+        }
+
+      }
+    }
+
+    stage('Quality Gate') {
+      steps {
+        waitForQualityGate true
+        echo '--- QualityGate Passed ---'
+      }
+    }
+    
     stage('Deploy') {
       parallel {
         stage('Deploy Dev') {
