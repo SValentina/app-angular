@@ -20,7 +20,7 @@ pipeline {
             BUTTON = 'success'
           }
           steps {
-            contentReplace(configs: [fileContentReplaceConfig(configs: [fileContentReplaceItemConfig(replace: '${TITLE}', search: '%TITLE%'), fileContentReplaceItemConfig(replace: '${BUTTON}', search: '%BUTTON%')], fileEncoding: 'UTF-8', filePath: "${env.WORKSPACE}"+'/src/environments/environment.ts')])
+            contentReplace(configs: [fileContentReplaceConfig(configs: [fileContentReplaceItemConfig(replace: "${TITLE}", search: '%TITLE%'), fileContentReplaceItemConfig(replace: "${BUTTON}", search: '%BUTTON%')], fileEncoding: 'UTF-8', filePath: "${env.WORKSPACE}"+'/src/environments/environment.ts')])
             sh 'ng build --configuration ${ENV_DEV}'
             zip(zipFile: "${ENV_DEV}"+'.zip', dir: "${env.WORKSPACE}"+'/dist/app-angular')
           }
@@ -33,7 +33,7 @@ pipeline {
           }
           steps {
             sleep(time: 60, unit: 'SECONDS')
-            contentReplace(configs: [fileContentReplaceConfig(configs: [fileContentReplaceItemConfig(replace: '${TITLE}', search: '%TITLE%|dev'), fileContentReplaceItemConfig(replace: '${BUTTON}', search: '%BUTTON%|success')], fileEncoding: 'UTF-8', filePath: "${env.WORKSPACE}"+'/src/environments/environment.ts')])
+            contentReplace(configs: [fileContentReplaceConfig(configs: [fileContentReplaceItemConfig(replace: "${TITLE}", search: '%TITLE%|dev'), fileContentReplaceItemConfig(replace: "${BUTTON}", search: '%BUTTON%|success')], fileEncoding: 'UTF-8', filePath: "${env.WORKSPACE}"+'/src/environments/environment.ts')])
             sh 'ng build --configuration ${ENV_PROD}'
             zip(zipFile: "${ENV_PROD}"+'.zip', dir: "${env.WORKSPACE}"+'/dist/app-angular')
           }
