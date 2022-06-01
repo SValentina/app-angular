@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  title: '%TITLE%'
+  title: '%TITLE%',
+  button: '%BUTTON%
 };
 
 /*
