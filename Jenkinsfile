@@ -31,9 +31,12 @@ pipeline {
             BUTTON = 'success'
           }
           steps {
-            contentReplace(configs: [fileContentReplaceConfig(configs: [fileContentReplaceItemConfig(replace: "${TITLE}", search: '%TITLE%'), fileContentReplaceItemConfig(replace: "${BUTTON}", search: '%BUTTON%')], fileEncoding: 'UTF-8', filePath: "${env.WORKSPACE}"+'/src/environments/environment.ts')])
-            sh 'ng build --configuration ${ENV_DEV}'
-            zip(zipFile: "${ENV_DEV}"+'.zip', dir: "${env.WORKSPACE}"+'/dist/app-angular')
+            dir ('dev'){
+               sh 'pwd'
+               contentReplace(configs: [fileContentReplaceConfig(configs: [fileContentReplaceItemConfig(replace: "${TITLE}", search: '%TITLE%'), fileContentReplaceItemConfig(replace: "${BUTTON}", search: '%BUTTON%')], fileEncoding: 'UTF-8', filePath: "${env.WORKSPACE}"+'/src/environments/environment.ts')])
+               sh 'ng build --configuration ${ENV_DEV}'
+               zip(zipFile: "${ENV_DEV}"+'.zip', dir: "${env.WORKSPACE}"+'dist/app-angular')
+            }
           }
         }
 
