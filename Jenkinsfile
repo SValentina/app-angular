@@ -50,8 +50,8 @@ pipeline {
 
     stage('SonarQube Analysis') {
       environment {
-        sonarHome = 'sonar-scanner'
-        JAVA_HOME = 'openjdk-11'
+        sonarHome = tool 'sonar-scanner'
+        JAVA_HOME = tool 'openjdk-11'
       }
       steps {
         withSonarQubeEnv('sonarqube') {
