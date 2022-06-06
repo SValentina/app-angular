@@ -13,4 +13,4 @@ RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 #Install Docker
 RUN apt-get -y update
-RUN apt-get -y install docker
+RUN apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
