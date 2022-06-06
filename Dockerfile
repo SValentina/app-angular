@@ -11,6 +11,6 @@ RUN apt-get update && apt-get install -y \
 CMD /bin/bash
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
-#Install Git
+#Install Docker
 RUN apt-get -y update
-RUN apt-get -y install git
+RUN apt-get -y install docker-ce
