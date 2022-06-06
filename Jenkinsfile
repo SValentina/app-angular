@@ -29,8 +29,7 @@ pipeline {
             BUTTON = 'success'
           }
           steps {
-            dir ('dev'){
-               sh 'pwd'
+            dir ('dev'){               
                contentReplace(configs: [fileContentReplaceConfig(configs: [fileContentReplaceItemConfig(replace: "${TITLE}", search: '%TITLE%'), fileContentReplaceItemConfig(replace: "${BUTTON}", search: '%BUTTON%')], fileEncoding: 'UTF-8', filePath: "${env.WORKSPACE}"+'/dev/src/environments/environment.ts')])
                sh 'ng build --configuration ${ENV_DEV}'
                zip(zipFile: "${ENV_DEV}"+'.zip', dir: "${env.WORKSPACE}"+'/dev/dist/app-angular')
@@ -59,22 +58,16 @@ pipeline {
         stage('Deploy Dev') {
           steps {
             dir('dev'){
-              withCredentials(bindings: [azureServicePrincipal('AzureServicePrincipal')]) {
-                sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
-                sh 'az webapp deployment source config-zip -g $RESOURCE_GROUP -n $APP_NAME --src '+"${ENV_DEV}"+'.zip'
-              }
+              sh 'dev'
             }
           }
         }
 
         stage('Deploy Prod') {
-          steps {
-            sleep(time: 30, unit: 'SECONDS')
+          steps {            
             dir('prod'){
-              withCredentials(bindings: [azureServicePrincipal('AzureServicePrincipal')]) {
-                sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
-                sh 'az webapp deployment source config-zip -g $RESOURCE_GROUP -n $APP_NAME --src '+"${ENV_PROD}"+'.zip'
-              }
+              sh 'docker version'
+              sh "echo 'FROM nginx:1.17.1-alpine \nCOPY dist/app-angular /usr/share/nginx/html' > Dockerfile"
             }
           }
         }
