@@ -10,7 +10,3 @@ RUN apt-get update && apt-get install -y \
     curl zip 
 CMD /bin/bash
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
-
-#Install Docker
-#RUN apt-get -y update
-#RUN apt-get install docker.io
